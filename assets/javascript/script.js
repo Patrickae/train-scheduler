@@ -62,7 +62,7 @@ database.ref().on("child_added", function(snapshot){
 
 	var timeDiff = moment().diff(moment.unix(firstArrival, "X"), "minutes")
 
-	console.log(timeDiff);
+	console.log(timeDiff +" time diff");
 
 	var nextArr = moment.unix(firstArrival).format("h:mm a");
 
