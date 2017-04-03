@@ -58,9 +58,9 @@ database.ref().on("child_added", function(snapshot){
 	console.log(train);
 	console.log(dest);
 	console.log(firstArrival);
-	console.log(frequency);
+	console.log(frequency + " freq");
 
-	var timeDiff = moment().diff(moment.unix(firstArrival, "X"), "minutes")
+	var timeDiff = moment().diff(moment.unix(firstArrival, "X"), "minutes");
 
 	console.log(timeDiff +" time diff");
 
@@ -72,9 +72,18 @@ database.ref().on("child_added", function(snapshot){
 
 	if(timeDiff > 0){
 
-		var remainder = timeDiff % frequency;
+		var freqNum = parseInt(frequency);
+		var diffNum = parseInt(timeDiff) ;
 
-		console.log(remainder);
+		console.log(isNaN(diffNum));
+
+		var rem = diffNum % freqNum;
+
+		var remainder = freqNum - rem;
+
+
+
+		console.log("remainder "+remainder);
 
 		nextArr = moment().add(remainder, "minutes").format("X");
 
@@ -91,7 +100,7 @@ database.ref().on("child_added", function(snapshot){
 	console.log(nextArr);
 	console.log(minsAway);
 
-	nextArrPretty = moment.unix(nextArr).format("h:mm a");
+	var nextArrPretty = moment.unix(nextArr).format("h:mm a");
 	console.log(nextArrPretty);
 
 $("#table > tbody").append("<tr><td>" + train + "</td><td>" + dest + "</td><td>" + frequency + "</td><td>" + nextArrPretty + "</td><td>" + minsAway + "</td><td><button class='btn btn-default'>X</button></td></tr>");
