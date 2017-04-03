@@ -96,7 +96,8 @@ database.ref().on("child_added", function(snapshot){
 		 console.log(nextArr);
 	};
 
-	var minsAway = 0 - moment().diff(moment.unix(nextArr, "X"), "minutes");
+	var adjMinsAway = moment().diff(moment.unix(nextArr, "X"), "minutes") -1;
+	var minsAway = 0 - adjMinsAway;
 	console.log(nextArr);
 	console.log(minsAway);
 
