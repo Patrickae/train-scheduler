@@ -15,6 +15,10 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
+
+
+
+
 //when submit is clicked, run function
 $("#submit").on("click", function(){
 
@@ -24,7 +28,6 @@ var impTrain = $("#train-name").val().trim();
 var impDest = $("#destination").val().trim();
 var impArrTime = moment($("#first-train-time").val().trim(), "HH:mm").format("X");
 var impFrequency = $("#frequency").val().trim();
-
 
 // create an object of those variables
 var newImp = {
@@ -37,24 +40,22 @@ var newImp = {
 
 database.ref().push(newImp);
 
-
-
-
 //clear inputs
 $("input").val("");
 
 });
 
+//on page load or new child added, display on page
 
-//
+
 database.ref().on("child_added", function(snapshot){
 
-	console.log(snapshot.val());
+		console.log(snapshot.val());
 
-	var train = snapshot.val().train;
-	var dest = snapshot.val().dest;
-	var firstArrival = snapshot.val().firstArrival;
-	var frequency = snapshot.val().frequency;
+		var train = snapshot.val().train;
+		var dest = snapshot.val().dest;
+		var firstArrival = snapshot.val().firstArrival;
+		var frequency = snapshot.val().frequency;
 
 	// console.log(train);
 	// console.log(dest);
@@ -62,7 +63,6 @@ database.ref().on("child_added", function(snapshot){
 	// console.log(frequency + " freq");
 
 	var timeDiff = moment().diff(moment.unix(firstArrival, "X"), "minutes");
-
 
 	var nextArr = moment.unix(firstArrival).format("h:mm a");
 
@@ -74,11 +74,8 @@ database.ref().on("child_added", function(snapshot){
 
 		var freqNum = parseInt(frequency);
 		var diffNum = parseInt(timeDiff) ;
-
-		console.log(isNaN(diffNum));
-
+		
 		var rem = diffNum % freqNum;
-
 		var remainder = freqNum - rem;
 
 
@@ -98,10 +95,16 @@ database.ref().on("child_added", function(snapshot){
 
 		var nextArrPretty = moment.unix(nextArr).format("h:mm a");
 		
-
 		$("#table > tbody").append("<tr><td>" + train + "</td><td>" + dest + "</td><td>" + frequency + "</td><td>" + nextArrPretty + "</td><td>" + minsAway + "</td></tr>");
-
 
 	});
 
+
+
+$(document).on("click","#delete", function(){
+	database.ref().remove();
+	$("tbody").empty();
+
+	
+});
 
