@@ -1,0 +1,8 @@
+.jumbotron{ background-image: url(../images/train.jpg);
+			background-repeat: no-repeat;
+			color:#ffffff;
+			text-shadow: 2px 2px #000000; 
+			border: 2px solid #F6F7EB;
+			background-size:100%;
+			background-position: center;}
+body{ background-color: #393E41; }

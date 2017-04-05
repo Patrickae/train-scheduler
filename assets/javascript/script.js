@@ -1,5 +1,5 @@
   
-
+//configure firebase
 
 var config = {
 	apiKey: "AIzaSyAdEHOdishKsrxIfSTh1t6e9CWUaQP4-0U",
@@ -15,37 +15,38 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-
+//when submit is clicked, run function
 $("#submit").on("click", function(){
 
 	event.preventDefault();
-
-	var impTrain = $("#train-name").val().trim();
-	var impDest = $("#destination").val().trim();
-	var impArrTime = moment($("#first-train-time").val().trim(), "HH:mm").format("X");
-	var impFrequency = $("#frequency").val().trim();
-
-	console.log(impTrain);
-	console.log(impFrequency);
-	console.log(impDest);
-	console.log(impArrTime);
+//save input values as variables
+var impTrain = $("#train-name").val().trim();
+var impDest = $("#destination").val().trim();
+var impArrTime = moment($("#first-train-time").val().trim(), "HH:mm").format("X");
+var impFrequency = $("#frequency").val().trim();
 
 
-	var newImp = {
-		train: impTrain,
-		dest: impDest,
-		firstArrival: impArrTime,
-		frequency : impFrequency
-	}
+// create an object of those variables
+var newImp = {
+	train: impTrain,
+	dest: impDest,
+	firstArrival: impArrTime,
+	frequency : impFrequency
+}
+//push that object to firebase
 
-	database.ref().push(newImp);
+database.ref().push(newImp);
 
-	$("input").val("");
+
+
+
+//clear inputs
+$("input").val("");
 
 });
 
 
-
+//
 database.ref().on("child_added", function(snapshot){
 
 	console.log(snapshot.val());
@@ -55,20 +56,19 @@ database.ref().on("child_added", function(snapshot){
 	var firstArrival = snapshot.val().firstArrival;
 	var frequency = snapshot.val().frequency;
 
-	console.log(train);
-	console.log(dest);
-	console.log(firstArrival);
-	console.log(frequency + " freq");
+	// console.log(train);
+	// console.log(dest);
+	// console.log(firstArrival);
+	// console.log(frequency + " freq");
 
 	var timeDiff = moment().diff(moment.unix(firstArrival, "X"), "minutes");
 
-	console.log(timeDiff +" time diff");
 
 	var nextArr = moment.unix(firstArrival).format("h:mm a");
 
 	
 
-	 var nextArr;
+	var nextArr;
 
 	if(timeDiff > 0){
 
@@ -82,32 +82,26 @@ database.ref().on("child_added", function(snapshot){
 		var remainder = freqNum - rem;
 
 
-
-		console.log("remainder "+remainder);
-
 		nextArr = moment().add(remainder, "minutes").format("X");
 
-		console.log(nextArr);
+		// console.log(nextArr);
 
 	}
 	else{
-		 nextArr = firstArrival;
+		nextArr = firstArrival;
 
-		 console.log(nextArr);
-	};
+		 // console.log(nextArr);
+		};
 
-	var adjMinsAway = moment().diff(moment.unix(nextArr, "X"), "minutes") -1;
-	var minsAway = 0 - adjMinsAway;
-	console.log(nextArr);
-	console.log(minsAway);
+		var adjMinsAway = moment().diff(moment.unix(nextArr, "X"), "minutes") -1;
+		var minsAway = 0 - adjMinsAway;
 
-	var nextArrPretty = moment.unix(nextArr).format("h:mm a");
-	console.log(nextArrPretty);
+		var nextArrPretty = moment.unix(nextArr).format("h:mm a");
+		
 
-$("#table > tbody").append("<tr><td>" + train + "</td><td>" + dest + "</td><td>" + frequency + "</td><td>" + nextArrPretty + "</td><td>" + minsAway + "</td><td><button class='btn btn-default'>X</button></td></tr>");
+		$("#table > tbody").append("<tr><td>" + train + "</td><td>" + dest + "</td><td>" + frequency + "</td><td>" + nextArrPretty + "</td><td>" + minsAway + "</td></tr>");
 
 
-});
-
+	});
 
 
